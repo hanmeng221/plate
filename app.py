@@ -1,5 +1,5 @@
 #coding=utf-8
-from flask import Flask, jsonify, send_file, send_from_directory
+from flask import Flask, jsonify, send_file, send_from_directory,request
 import os
 from urllib import unquote
 # 实例化
@@ -12,7 +12,7 @@ def index():
         os.path.join(os.path.dirname(__file__), 'static', 'index.html'))
 
 
-@app.route('/img', methods=['GET', "POST"])
+@app.route('/img')
 def img():
 
     img_list = []
@@ -23,14 +23,16 @@ def img():
     return jsonify(img_list)
 
 
-@app.route('/img/<id>')
+@app.route('/img/<id>',methods=['GET', "POST"])
 def get_img(id):
-    # 获得车牌号, 在这里写处理函数
     myID = unquote(id)
-    print(myID)
-
-    return send_from_directory(
-        os.path.join(os.path.dirname(__file__), 'img'), myID + '.jpg')
+    if request.method == 'POST':
+        # 获得车牌号, 在这里写处理函数
+        print(myID)
+        return 'ok'
+    else:
+        return send_from_directory(
+            os.path.join(os.path.dirname(__file__), 'img'), myID + '.jpg')
 
 
 if __name__ == '__main__':
